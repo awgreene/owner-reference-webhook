@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-auditor-webhook-svc
+  namespace: webhook-example
+  labels:
+    app: object-auditor
+spec:
+  ports:
+  - port: 443
+    targetPort: 443
+  selector:
+    app: object-auditor

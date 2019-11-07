@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-auditor-webhook-deployment
+  namespace: webhook-example
+  labels:
+    app: object-auditor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        app: object-auditor
+  template:
+    metadata:
+      labels:
+        app: object-auditor
+    spec:
+      containers:
+        - name: object-auditor
+          image: quay.io/agreene/object-auditor:v1
+          imagePullPolicy: IfNotPresent
+          args:
+            - -tlsCertFile=/etc/webhook/certs/cert.pem
+            - -tlsKeyFile=/etc/webhook/certs/key.pem
+            - -alsologtostderr
+            - -v=4
+            - 2>&1
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /etc/webhook/certs
+              readOnly: true
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: object-auditor-webhook-certs

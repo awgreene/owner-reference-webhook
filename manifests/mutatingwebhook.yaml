@@ -1,0 +1,23 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: object-auditor-webhook-cfg
+  namespace: webhook-example
+  labels:
+    app: object-auditor
+webhooks:
+  - name: object-auditor.agreene.me
+    clientConfig:
+      service:
+        name: object-auditor-webhook-svc
+        namespace: webhook-example
+        path: "/mutate"
+      caBundle: ${CA_BUNDLE}
+    rules:
+      - operations: [ "CREATE" ]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["configmaps"]
+    namespaceSelector:
+      matchLabels:
+        object-auditing: "enabled"

@@ -1,0 +1,6 @@
+dep ensure
+CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o webhook.sh ./cmd/main/
+docker build --no-cache -t quay.io/agreene/object-auditor:v2 .
+rm -rf webhook.sh
+
+docker push quay.io/agreene/object-auditor:v2
